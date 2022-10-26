@@ -1,0 +1,26 @@
+{
+  "name": "millix-bridge",
+  "version": "1.0.0",
+  "description": "Millix bridge",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/millix/millix-bridge.git"
+  },
+  "keywords": [
+    "millix"
+  ],
+  "author": "joaorafaelalmeida",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/millix/millix-bridge/issues"
+  },
+  "homepage": "https://github.com/millix/millix-bridge#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-cron": "^3.0.2"
+  }
+}
