@@ -1,0 +1,10 @@
+const environment = {};
+
+environment['MODE_DEBUG']                    = false;
+environment['MODE_TEST_NETWORK']             = false;
+environment['NODE_PORT_API']                 = 5500;
+environment['NODE_HOST']                     = 'localhost';
+environment['DATA_BASE_DIR_MAIN_NETWORK']    = './millix';
+environment['DATA_BASE_DIR_TEST_NETWORK']    = './millix-testnet';
+
+export default environment;
