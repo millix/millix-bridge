@@ -37,3 +37,13 @@ let DATA_BASE_DIR                       = MODE_TEST_NETWORK ? DATA_BASE_DIR_TEST
 export const NODE_PORT_API              = getConstValue('NODE_PORT_API');
 export const NODE_HOST                  = getConstValue('NODE_HOST');
 export const NODE_KEY_PATH              = DATA_BASE_DIR + '/node.json';
+
+export default {
+    MODE_DEBUG,
+    MODE_TEST_NETWORK,
+    DATA_BASE_DIR_MAIN_NETWORK,
+    DATA_BASE_DIR_TEST_NETWORK,
+    NODE_PORT_API,
+    NODE_HOST,
+    NODE_KEY_PATH
+}
