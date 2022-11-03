@@ -1,1 +1,1 @@
-//to do
+//Responsible for building the Database connection (for the bridge)

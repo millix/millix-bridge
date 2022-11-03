@@ -1,5 +1,6 @@
 //to do
 
-/* api to fetch
+/* 
+Check the API to fetch the list of transactions
 
 */
