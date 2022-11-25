@@ -4,6 +4,7 @@
   "description": "Millix bridge",
   "main": "app.js",
   "scripts": {
+    "start": "nodemon --exec babel-node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -13,7 +14,7 @@
   "keywords": [
     "millix"
   ],
-  "author": "joaorafaelalmeida",
+  "author": "millix",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/millix/millix-bridge/issues"
@@ -21,6 +22,15 @@
   "homepage": "https://github.com/millix/millix-bridge#readme",
   "dependencies": {
     "express": "^4.18.2",
-    "node-cron": "^3.0.2"
+    "mysql2": "^2.3.3",
+    "node-cron": "^3.0.2",
+    "sequelize": "^6.25.8",
+    "yargs": "^17.6.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@babel/node": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "nodemon": "^2.0.20"
   }
 }

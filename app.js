@@ -1,6 +1,7 @@
 import config from './core/config/config';
-
-const cron = require('node-cron');
+import cron from 'node-cron';
+import Database from './core/storage/database';
+import Models from './core/storage/models/models';
 
 const argv = require('yargs')
     .options({
@@ -19,13 +20,30 @@ if (argv.debug === 'true') {
 }
 
 if (argv.apiPort) {
-    config.NODE_PORT_API = argv.apiPort;
+    config.API_PORT = argv.apiPort;
 }
 
 if (argv.host) {
-    config.NODE_HOST = argv.host;
+    config.API_HOST = argv.host;
 }
 
-cron.schedule('* * * * *', () => {
-    console.log('[main] fecting new transactions');
-});
+(async() => {
+    console.log('[app] starting millix bridge agent');
+    const sequelize = await Database.getConnection();
+
+    try {
+        await sequelize.authenticate();
+        console.log('[database] connection has been established successfully.');
+
+        await Models.sync();
+        console.log('[database] database models synced.');
+    }
+    catch (e) {
+        console.error('[database] unexpected database error: ', e);
+        throw e;
+    }
+
+    cron.schedule('* * * * *', () => {
+        console.log('[main] fecting new transactions');
+    });
+})();
