@@ -1,7 +1,7 @@
 import config from './core/config/config';
-import cron from 'node-cron';
 import Database from './core/storage/database';
 import Models from './core/storage/models/models';
+import MillixBridge from './core/bridge/millix-bridge';
 
 const argv = require('yargs')
     .options({
@@ -43,7 +43,6 @@ if (argv.host) {
         throw e;
     }
 
-    cron.schedule('* * * * *', () => {
-        console.log('[main] fecting new transactions');
-    });
+    MillixBridge.initialize();
+        
 })();
