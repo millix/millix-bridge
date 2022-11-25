@@ -1,10 +1,9 @@
 const environment = {};
 
-environment['MODE_DEBUG']                    = false;
-environment['MODE_TEST_NETWORK']             = false;
-environment['NODE_PORT_API']                 = 5500;
-environment['NODE_HOST']                     = 'localhost';
-environment['DATA_BASE_DIR_MAIN_NETWORK']    = './millix';
-environment['DATA_BASE_DIR_TEST_NETWORK']    = './millix-testnet';
+environment['MODE_DEBUG']             = false;
+environment['DATABASE_HOST']          = 'localhost';
+environment['DATABASE_NAME']          = 'millix_bridge';
+environment['DATABASE_AUTH_USER']     = 'root';
+environment['DATABASE_AUTH_PASSWORD'] = 'password';
 
 export default environment;
