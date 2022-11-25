@@ -23,7 +23,7 @@ const Transaction = sequelize.define('transaction', {
     },
     transactionIdTo  : {
         type     : DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     addressFrom      : {
         type     : DataTypes.STRING,
@@ -33,7 +33,11 @@ const Transaction = sequelize.define('transaction', {
         type     : DataTypes.STRING,
         allowNull: false
     },
-    amount           : {
+    amountFrom       : {
+        type     : DataTypes.BIGINT,
+        allowNull: false
+    },
+    amountTo         : {
         type     : DataTypes.BIGINT,
         allowNull: false
     },
