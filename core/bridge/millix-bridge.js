@@ -15,6 +15,19 @@ class MillixBridge {
             //...
         });
     }
+
+    async onTransactionNew(transactionId) {
+
+    }
+
+    async onTransactionHibernate(transactionId) {
+
+    }
+
+    async onTransactionValidationUpdate(transactionId, updateStatus) {
+
+    }
+
 }
 
 
