@@ -6,4 +6,10 @@ environment['DATABASE_NAME']          = 'millix_bridge';
 environment['DATABASE_AUTH_USER']     = 'root';
 environment['DATABASE_AUTH_PASSWORD'] = 'password';
 
+environment['MODE_TEST_NETWORK']             = false;
+environment['NODE_PORT_API']                 = 5500;
+environment['NODE_HOST']                     = 'localhost';
+environment['NODE_DATA_FOLDER_MAIN_NETWORK'] = './millix';
+environment['NODE_DATA_FOLDER_TEST_NETWORK'] = './millix-testnet';
+
 export default environment;
