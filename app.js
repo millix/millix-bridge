@@ -1,19 +1,23 @@
-import config from './core/config/config';
-import Database from './core/storage/database';
-import Models from './core/storage/models/models';
-import MillixBridge from './core/bridge/millix-bridge';
+import config from './core/config/config.js';
+import Database from './core/storage/database.js';
+import Models from './core/storage/models/models.js';
+import MillixBridge from './core/bridge/millix-bridge.js';
+import logger from './core/logger.js';
+import Server from './core/api/server.js';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers'
 
-const argv = require('yargs')
-    .options({
-        'initial-peers': {
-            demandOption: false,
-            array       : true
-        },
-        'nat-pmp'      : {
-            type   : 'boolean',
-            default: true
-        }
-    }).argv;
+
+const argv = yargs(hideBin(process.argv)).options({
+    'initial-peers': {
+        demandOption: false,
+        array       : true
+    },
+    'nat-pmp'      : {
+        type   : 'boolean',
+        default: true
+    }
+}).argv;
 
 if (argv.debug === 'true') {
     config.MODE_DEBUG = true;
@@ -28,21 +32,25 @@ if (argv.host) {
 }
 
 (async() => {
-    console.log('[app] starting millix bridge agent');
+    logger.debug('[app] starting millix bridge agent');
     const sequelize = await Database.getConnection();
 
     try {
         await sequelize.authenticate();
-        console.log('[database] connection has been established successfully.');
+        logger.debug('[database] connection has been established successfully.');
 
         await Models.sync();
-        console.log('[database] database models synced.');
+        logger.debug('[database] database models synced.');
     }
     catch (e) {
-        console.error('[database] unexpected database error: ', e);
+        logger.error('[database] unexpected database error: ', e);
         throw e;
     }
 
+    const server = new Server();
+    await server.start();
+    logger.debug('[api] api started');
+
     MillixBridge.initialize();
-        
+
 })();
