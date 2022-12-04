@@ -28,7 +28,7 @@ export default {
                         await MillixBridge.onTransactionHibernate(transactionId);
                         break;
                     default:
-                        res.send({
+                        return res.send({
                             status : 'error',
                             message: `unknown action: ${action}`
                         });
