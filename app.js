@@ -3,9 +3,8 @@ import Database from './core/storage/database.js';
 import Models from './core/storage/models/models.js';
 import MillixBridge from './core/bridge/millix-bridge.js';
 import logger from './core/logger.js';
-import Server from './core/api/server.js';
 import yargs from 'yargs';
-import { hideBin } from 'yargs/helpers'
+import {hideBin} from 'yargs/helpers';
 
 
 const argv = yargs(hideBin(process.argv)).options({
@@ -47,10 +46,6 @@ if (argv.host) {
         throw e;
     }
 
-    const server = new Server();
-    await server.start();
-    logger.debug('[api] api started');
-
-    MillixBridge.initialize();
+    await MillixBridge.initialize();
 
 })();
