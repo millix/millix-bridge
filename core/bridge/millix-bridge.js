@@ -1,6 +1,7 @@
 import cron from 'node-cron';
 import Server from '../api/server.js';
 import logger from '../logger.js';
+import TransactionRepository from '../storage/repositories/transactions.js';
 
 
 class MillixBridge {
@@ -17,7 +18,7 @@ class MillixBridge {
     }
 
     async onTransactionNew(transactionId) {
-
+        await TransactionRepository.registerNewTransaction(transactionId, 'millix');
     }
 
     async onTransactionHibernate(transactionId) {
