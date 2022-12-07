@@ -10,11 +10,28 @@ class TransactionRepository {
         });
     }
 
-    async updateTransactionProcessingState(transactionIdFrom, newProcessingState) {
+    async updateTransactionState(transactionIdFrom, newTransactionState) {
+        return await TransactionModel.update({
+            transactionState: newTransactionState
+        }, {
+            where: {transactionIdFrom}
+        });
+    }
+
+    async updateProcessingState(transactionIdFrom, newProcessingState) {
         return await TransactionModel.update({
             processingState: newProcessingState
         }, {
             where: {transactionIdFrom}
+        });
+    }
+
+    async listTransactionsToMint() {
+        return await TransactionModel.findAll({
+            where: {
+                processingState : 'HIBERNATED',
+                transactionState: 'VALID'
+            }
         });
     }
 }

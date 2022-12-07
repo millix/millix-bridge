@@ -1,20 +1,26 @@
-import cron from 'node-cron';
 import Server from '../api/server.js';
 import logger from '../logger.js';
 import TransactionRepository from '../storage/repositories/transactions.js';
+import task from '../task.js';
+import EthereumBridge from './ethereum-bridge.js';
 
 
 class MillixBridge {
     async initialize() {
         this.server = new Server();
         await this.server.start();
-        logger.debug('[api] api started');
+        logger.debug('[millix-bridge] api started');
 
-        cron.schedule('* * * * *', () => {
-            console.log('[main] fecting new transactions');
-            //faz fetch da bd do nó
-            //...
-        });
+        task.scheduleTask('mint-transactions', this._processTransactionMint.bind(this), 30000, true);
+    }
+
+    async _processTransactionMint() {
+        const transactions = await TransactionRepository.listTransactionsToMint();
+        logger.debug(`[millix-bridge] ${transactions.length} transactions to mint`);
+        for (let transaction of transactions) {
+            logger.debug(`[millix-bridge] minting transaction`, transaction.toJSON());
+            await EthereumBridge.mintWrappedMillix(transaction);
+        }
     }
 
     async onTransactionNew(transactionId) {
@@ -22,11 +28,11 @@ class MillixBridge {
     }
 
     async onTransactionHibernate(transactionId) {
-
+        await TransactionRepository.updateProcessingState(transactionId, 'HIBERNATED');
     }
 
     async onTransactionValidationUpdate(transactionId, updateStatus) {
-
+        await TransactionRepository.updateTransactionState(transactionId, updateStatus.toUpperCase());
     }
 
 }

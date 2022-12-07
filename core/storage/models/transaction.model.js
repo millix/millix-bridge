@@ -21,7 +21,7 @@ const Transaction = sequelize.define('transaction', {
         allowNull: false
     },
     transactionIdTo  : {
-        type     : DataTypes.STRING
+        type: DataTypes.STRING
     },
     addressFrom      : {
         type: DataTypes.STRING
@@ -37,6 +37,9 @@ const Transaction = sequelize.define('transaction', {
     },
     event            : {
         type: DataTypes.STRING
+    },
+    transactionState : {
+        type     : DataTypes.STRING,
     },
     processingState  : {
         type     : DataTypes.STRING,
