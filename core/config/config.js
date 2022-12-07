@@ -16,7 +16,7 @@ const const_value_default = {
 
 let environment;
 try {
-    environment = require('./environment');
+    environment = await import('./environment.js');
     environment = environment.default;
 }
 catch (ex) {
