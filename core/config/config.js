@@ -5,6 +5,7 @@ const const_value_default = {
     DATABASE_NAME         : 'millix_bridge',
     DATABASE_AUTH_USER    : 'root',
     DATABASE_AUTH_PASSWORD: '',
+    DATABASE_PORT         : '',
 
     MODE_TEST_NETWORK            : false,
     NODE_PORT_API                : 5500,
@@ -39,6 +40,7 @@ export const DATABASE_HOST          = getConstValue('DATABASE_HOST');
 export const DATABASE_NAME          = getConstValue('DATABASE_NAME');
 export const DATABASE_AUTH_USER     = getConstValue('DATABASE_AUTH_USER');
 export const DATABASE_AUTH_PASSWORD = getConstValue('DATABASE_AUTH_PASSWORD');
+export const DATABASE_PORT          = getConstValue('DATABASE_PORT');
 
 export const API_PORT = 8080;
 export const API_HOST = 'localhost';
@@ -59,6 +61,7 @@ export default {
     DATABASE_NAME,
     DATABASE_AUTH_USER,
     DATABASE_AUTH_PASSWORD,
+    DATABASE_PORT,
     NODE_KEY_PATH,
     NODE_PORT_API,
     NODE_HOST,
