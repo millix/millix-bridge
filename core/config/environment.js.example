@@ -4,8 +4,9 @@ environment['MODE_DEBUG']             = false;
 environment['DATABASE_HOST']          = 'localhost';
 environment['DATABASE_NAME']          = 'millix_bridge';
 environment['DATABASE_AUTH_USER']     = 'root';
-environment['DATABASE_PORT']          = '';
-environment['DATABASE_AUTH_PASSWORD'] = '';
+environment['DATABASE_PORT']          = 3306;
+environment['DATABASE_AUTH_PASSWORD'] = 'your_root_password';
+environment['DATABASE_DIALECT']       = 'mysql';
 
 environment['MODE_TEST_NETWORK']             = false;
 environment['NODE_PORT_API']                 = 5500;
