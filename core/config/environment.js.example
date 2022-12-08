@@ -10,6 +10,7 @@ environment['DATABASE_AUTH_PASSWORD'] = '';
 environment['MODE_TEST_NETWORK']             = false;
 environment['NODE_PORT_API']                 = 5500;
 environment['NODE_HOST']                     = 'localhost';
+environment['NODE_SHARD_ID']                 = 'qGuUgMMVmaCvqrvoWG6zARjkrujGMpzJmpNhBgz1y3RjBG7ZR';
 environment['NODE_DATA_FOLDER_MAIN_NETWORK'] = './millix';
 environment['NODE_DATA_FOLDER_TEST_NETWORK'] = './millix-testnet';
 

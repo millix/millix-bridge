@@ -1,4 +1,5 @@
 import TransactionModel from '../models/transaction.model.js';
+import {Op} from 'sequelize';
 
 
 class TransactionRepository {
@@ -18,6 +19,19 @@ class TransactionRepository {
         });
     }
 
+    async updateTransaction(transactionIdFrom, addressFrom, amountFrom, networkTo, addressTo, amountTo, event) {
+        return await TransactionModel.update({
+            addressFrom,
+            amountFrom,
+            networkTo,
+            addressTo,
+            amountTo,
+            event
+        }, {
+            where: {transactionIdFrom}
+        });
+    }
+
     async updateProcessingState(transactionIdFrom, newProcessingState) {
         return await TransactionModel.update({
             processingState: newProcessingState
@@ -30,7 +44,31 @@ class TransactionRepository {
         return await TransactionModel.findAll({
             where: {
                 processingState : 'HIBERNATED',
-                transactionState: 'VALID'
+                transactionState: 'VALID',
+                addressFrom     : {
+                    [Op.not]: null
+                },
+                transactionIdTo : {
+                    [Op.is]: null
+                }
+            }
+        });
+    }
+
+    async listTransactionsMissingData() {
+        return await TransactionModel.findAll({
+            where: {
+                addressFrom: {
+                    [Op.is]: null
+                }
+            }
+        });
+    }
+
+    async deleteTransaction(transactionIdFrom) {
+        return await TransactionModel.delete({
+            where: {
+                transactionIdFrom
             }
         });
     }
