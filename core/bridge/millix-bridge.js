@@ -9,7 +9,7 @@ import fs from 'fs';
 import _ from 'lodash';
 import fetch from 'node-fetch';
 import {convertMillixToWrappedMillix, getBridgeMappingData, isMintTransaction, isValidBridgeTransaction} from '../utils/millix-utils.js';
-
+import { PROCESSING_STATE, EVENT } from '../utils/transaction-utils.js';
 
 class MillixBridge {
     async initialize() {
@@ -56,11 +56,11 @@ class MillixBridge {
 
                 if (isMintTransaction(data)) {
                     networkTo = bridgeMappingData.network;
-                    event     = 'MINT';
+                    event     = EVENT.MINT;
                 }
                 else {
                     networkTo = 'millix';
-                    event     = 'BURN';
+                    event     = EVENT.BURN;
                 }
 
                 addressTo = bridgeMappingData.address;
@@ -78,7 +78,7 @@ class MillixBridge {
     }
 
     async onTransactionHibernate(transactionId) {
-        await TransactionRepository.updateProcessingState(transactionId, 'HIBERNATED');
+        await TransactionRepository.updateProcessingState(transactionId, PROCESSING_STATE.HIBERNATED);
     }
 
     async onTransactionValidationUpdate(transactionId, updateStatus) {

@@ -1,13 +1,13 @@
 import TransactionModel from '../models/transaction.model.js';
 import {Op} from 'sequelize';
-
+import { PROCESSING_STATE, TRANSACTION_STATE} from '../../utils/transaction-utils.js';
 
 class TransactionRepository {
     async registerNewTransaction(transactionIdFrom, networkFrom) {
         return await TransactionModel.create({
             transactionIdFrom,
             networkFrom,
-            processingState: 'NEW'
+            processingState: PROCESSING_STATE.NEW
         });
     }
 
@@ -43,8 +43,8 @@ class TransactionRepository {
     async listTransactionsToMint() {
         return await TransactionModel.findAll({
             where: {
-                processingState : 'HIBERNATED',
-                transactionState: 'VALID',
+                processingState : PROCESSING_STATE.HIBERNATED,
+                transactionState: TRANSACTION_STATE.VALID,
                 addressFrom     : {
                     [Op.not]: null
                 },
