@@ -16,7 +16,7 @@ class Database {
                 config.DATABASE_AUTH_PASSWORD,
                 {
                     host   : config.DATABASE_HOST,
-                    dialect: 'mysql',
+                    dialect: config.DATABASE_DIALECT,
                     port: config.DATABASE_PORT
                 }
             );
