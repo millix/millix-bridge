@@ -8,17 +8,17 @@ This project is under construction
 
 - [ ] millix node setup
 
-- [ ] millix node code update to trigger event on tx hibernated
+- [x] millix node code update to trigger event on tx hibernated
 
 - [ ] millix wallet, with enhanced census configuration (more nodes and more validation rounds)
 
-- [ ] agent code to receive triggers from deposits
+- [x] agent code to receive triggers from deposits
 
-- [ ] agent code to log minting initialisation
+- [x] agent code to log minting initialisation
 
-- [ ] agent code to interact with the smartcontrat to mint wmlx
+- [x] agent code to interact with the smartcontrat to mint wmlx
 
-- [ ] agent code to log minting finalization
+- [x] agent code to log minting finalization
 
 - [ ] agent code to recover and process transactions that happened while it was offline
 
