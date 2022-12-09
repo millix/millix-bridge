@@ -7,6 +7,7 @@ import yargs from 'yargs';
 import {hideBin} from 'yargs/helpers';
 import path from 'path';
 import os from 'os';
+import EthereumBridge from './core/bridge/ethereum-bridge.js';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -57,5 +58,6 @@ config.NODE_DATA_FOLDER = dataFolder;
     }
 
     await MillixBridge.initialize();
+    await EthereumBridge.initialize();
 
 })();

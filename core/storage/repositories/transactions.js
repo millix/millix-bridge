@@ -32,6 +32,14 @@ class TransactionRepository {
         });
     }
 
+    async updateTransactionIdTo(transactionIdFrom, transactionIdTo) {
+        return await TransactionModel.update({
+            transactionIdTo
+        }, {
+            where: {transactionIdFrom}
+        });
+    }
+
     async updateProcessingState(transactionIdFrom, newProcessingState) {
         return await TransactionModel.update({
             processingState: newProcessingState
