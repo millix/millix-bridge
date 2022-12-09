@@ -1,6 +1,7 @@
 import TransactionModel from '../models/transaction.model.js';
 import {Op} from 'sequelize';
-import { PROCESSING_STATE, TRANSACTION_STATE} from '../../utils/transaction-utils.js';
+import {PROCESSING_STATE, TRANSACTION_STATE} from '../../utils/transaction-utils.js';
+
 
 class TransactionRepository {
     async registerNewTransaction(transactionIdFrom, networkFrom) {
@@ -32,9 +33,10 @@ class TransactionRepository {
         });
     }
 
-    async updateTransactionIdTo(transactionIdFrom, transactionIdTo) {
+    async updateTransactionAsMinted(transactionIdFrom, transactionIdTo) {
         return await TransactionModel.update({
-            transactionIdTo
+            transactionIdTo,
+            processingState: PROCESSING_STATE.MINTED
         }, {
             where: {transactionIdFrom}
         });

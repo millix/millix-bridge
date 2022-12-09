@@ -24,7 +24,7 @@ class EthereumBridge {
             from: config.BRIDGE_ETHEREUM_CONTRACT_OWNER_ADDRESS,
             gas : 100000
         });
-        await TransactionRepository.updateTransactionIdTo(transaction.transactionIdFrom, result.transactionHash);
+        await TransactionRepository.updateTransactionAsMinted(transaction.transactionIdFrom, result.transactionHash);
         logger.debug(`[ethereum-bridge] ${transaction.amountTo} wmlx minted on transaction ${result.transactionHash} to address ${transaction.addressTo}`);
     }
 
