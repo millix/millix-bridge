@@ -6,6 +6,7 @@ const const_value_default = {
     DATABASE_AUTH_USER    : 'root',
     DATABASE_AUTH_PASSWORD: '',
     DATABASE_PORT         : '',
+    DATABASE_DIALECT      : '',
 
     MODE_TEST_NETWORK            : false,
     NODE_PORT_API                : 5500,
@@ -47,6 +48,7 @@ export const DATABASE_NAME          = getConstValue('DATABASE_NAME');
 export const DATABASE_AUTH_USER     = getConstValue('DATABASE_AUTH_USER');
 export const DATABASE_AUTH_PASSWORD = getConstValue('DATABASE_AUTH_PASSWORD');
 export const DATABASE_PORT          = getConstValue('DATABASE_PORT');
+export const DATABASE_DIALECT       = getConstValue('DATABASE_DIALECT');
 
 export const API_PORT = 8080;
 export const API_HOST = 'localhost';
@@ -85,6 +87,7 @@ export default {
     DATABASE_NAME,
     DATABASE_AUTH_USER,
     DATABASE_AUTH_PASSWORD,
+    DATABASE_DIALECT,
     BRIDGE_DATA_FETCH_WAIT_TIME,
     BRIDGE_TRANSACTION_VERSION_MINT,
     BRIDGE_TRANSACTION_VERSION_BURN,
