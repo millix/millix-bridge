@@ -5,8 +5,8 @@ const const_value_default = {
     DATABASE_NAME         : 'millix_bridge',
     DATABASE_AUTH_USER    : 'root',
     DATABASE_AUTH_PASSWORD: '',
-    DATABASE_PORT         : '',
-    DATABASE_DIALECT      : '',
+    DATABASE_PORT         : 3306,
+    DATABASE_DIALECT      : 'mysql',
 
     MODE_TEST_NETWORK            : false,
     NODE_PORT_API                : 5500,
@@ -17,6 +17,7 @@ const const_value_default = {
 
     BRIDGE_ETHEREUM_PROVIDER               : undefined,
     BRIDGE_ETHEREUM_CONTRACT_WRAPPED_MILLIX: undefined,
+    BRIDGE_ETHEREUM_CONTRACT_CREATE_BLOCK  : undefined,
     BRIDGE_ETHEREUM_CONTRACT_OWNER_ADDRESS : undefined,
     BRIDGE_ETHEREUM_WALLET_PRIVATE_KEY     : undefined
 };
@@ -77,9 +78,9 @@ export const BRIDGE_ADDRESS_VERSION_TEST_NETWORK          = 'ldl';
 export const BRIDGE_ADDRESS_VERSION                       = MODE_TEST_NETWORK ? BRIDGE_ADDRESS_VERSION_TEST_NETWORK : BRIDGE_ADDRESS_VERSION_MAIN_NETWORK;
 export const BRIDGE_ETHEREUM_PROVIDER                     = getConstValue('BRIDGE_ETHEREUM_PROVIDER');
 export const BRIDGE_ETHEREUM_CONTRACT_WRAPPED_MILLIX      = getConstValue('BRIDGE_ETHEREUM_CONTRACT_WRAPPED_MILLIX');
+export const BRIDGE_ETHEREUM_CONTRACT_CREATE_BLOCK        = getConstValue('BRIDGE_ETHEREUM_CONTRACT_CREATE_BLOCK');
 export const BRIDGE_ETHEREUM_CONTRACT_OWNER_ADDRESS       = getConstValue('BRIDGE_ETHEREUM_CONTRACT_OWNER_ADDRESS');
 export const BRIDGE_ETHEREUM_WALLET_PRIVATE_KEY           = getConstValue('BRIDGE_ETHEREUM_WALLET_PRIVATE_KEY');
-
 
 export default {
     MODE_DEBUG,

@@ -24,7 +24,7 @@ class Server {
     }
 
     async registerRoutes() {
-        await this._registerRoutes(path.dirname(import.meta.url).replace(/^file:\/\/\//, '/') + '/routes');
+        await this._registerRoutes(path.dirname(import.meta.url).replace(/^file:\/\/\//, process.platform === 'win32' ? '' : '/') + '/routes');
     }
 
     async _registerRoutes(baseDirectory, currentDirectory = '/') {
@@ -39,7 +39,7 @@ class Server {
             if (stats.isFile()) {
                 logger.info(`registering routes: ${currentDirectory}`);
 
-                const controller = (await import(filePath)).default;
+                const controller = (await import(process.platform === 'win32' ? 'file://' + filePath : filePath)).default;
                 const endpoint   = controller.routes;
                 const routePath  = controller.path;
 
