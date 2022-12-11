@@ -1,4 +1,3 @@
-//Responsible for building the Database connection (for the bridge)
 import {Sequelize} from 'sequelize';
 import config from '../config/config.js';
 
