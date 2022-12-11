@@ -1,6 +1,7 @@
 import Server from '../api/server.js';
 import logger from '../logger.js';
 import TransactionRepository from '../storage/repositories/transactions.js';
+import VestingRuleRepository from '../storage/repositories/vesting-rule.js'
 import task from '../task.js';
 import EthereumBridge from './ethereum-bridge.js';
 import config from '../config/config.js';
@@ -10,6 +11,7 @@ import _ from 'lodash';
 import fetch from 'node-fetch';
 import {convertMillixToWrappedMillix, getBridgeMappingData, isMintTransaction, isValidBridgeTransaction} from '../utils/millix-utils.js';
 import { PROCESSING_STATE, EVENT } from '../utils/transaction-utils.js';
+import { isMintVested } from '../utils/transaction-utils.js';
 
 class MillixBridge {
     async initialize() {
@@ -62,6 +64,9 @@ class MillixBridge {
                     networkTo = 'millix';
                     event     = EVENT.BURN;
                 }
+
+                // TO DO
+                // await isMintVested(data);
 
                 addressTo = bridgeMappingData.address;
 
