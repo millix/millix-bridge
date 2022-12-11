@@ -42,6 +42,14 @@ class TransactionRepository {
         });
     }
 
+    async updateTransactionAsMintStarted(transactionIdFrom) {
+        return await TransactionModel.update({
+            processingState: PROCESSING_STATE.MINT_STARTED
+        }, {
+            where: {transactionIdFrom}
+        });
+    }
+
     async updateProcessingState(transactionIdFrom, newProcessingState) {
         return await TransactionModel.update({
             processingState: newProcessingState

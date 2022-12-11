@@ -7,6 +7,17 @@ import TransactionRepository from '../storage/repositories/transactions.js';
 class EthereumBridge {
     async initialize() {
         this.contract = EthereumClient.getWrappedMillixContract();
+
+        this.contract.events.MintWrappedMillix({})
+            .on('data', async event => {
+                logger.debug(`[ethereum-bridge] wmlx minted on transaction ${event.transactionHash} from millix transaction ${event.returnValues.txhash}`);
+                await TransactionRepository.updateTransactionAsMinted(event.returnValues.txhash, event.transactionHash);
+            })
+            .on('changed', changed => logger.debug(`[ethereum-bridge] websocked changed: ${changed}`))
+            .on('error', err => {
+                throw err;
+            })
+            .on('connected', data => logger.debug(`[ethereum-bridge] connected to ws with session id ${data}`));
     }
 
     async mintWrappedMillix(transaction) {
@@ -20,12 +31,11 @@ class EthereumBridge {
             throw Error(`[ethereum-bridge] invalid mint transaction ${transaction.transactionIdFrom}`);
         }
 
-        const result = await this.contract.methods.mint(transaction.addressTo, transaction.amountTo).send({
+        this.contract.methods.mint(transaction.addressTo, transaction.amountTo, transaction.transactionIdFrom).send({
             from: config.BRIDGE_ETHEREUM_CONTRACT_OWNER_ADDRESS,
             gas : 100000
         });
-        await TransactionRepository.updateTransactionAsMinted(transaction.transactionIdFrom, result.transactionHash);
-        logger.debug(`[ethereum-bridge] ${transaction.amountTo} wmlx minted on transaction ${result.transactionHash} to address ${transaction.addressTo}`);
+        await TransactionRepository.updateTransactionAsMintStarted(transaction.transactionIdFrom);
     }
 
 }
