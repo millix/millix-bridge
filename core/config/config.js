@@ -5,8 +5,8 @@ const const_value_default = {
     DATABASE_NAME         : 'millix_bridge',
     DATABASE_AUTH_USER    : 'root',
     DATABASE_AUTH_PASSWORD: '',
-    DATABASE_PORT         : '',
-    DATABASE_DIALECT      : '',
+    DATABASE_PORT         : 3306,
+    DATABASE_DIALECT      : 'mysql',
 
     MODE_TEST_NETWORK            : false,
     NODE_PORT_API                : 5500,
