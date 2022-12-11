@@ -1,6 +1,5 @@
-//Responsible for building the Database connection (for the bridge)
 import {Sequelize} from 'sequelize';
-import config from '../config/config';
+import config from '../config/config.js';
 
 
 class Database {
@@ -16,7 +15,8 @@ class Database {
                 config.DATABASE_AUTH_PASSWORD,
                 {
                     host   : config.DATABASE_HOST,
-                    dialect: 'mysql'
+                    dialect: config.DATABASE_DIALECT,
+                    port: config.DATABASE_PORT
                 }
             );
         }

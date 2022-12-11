@@ -1,6 +1,5 @@
-import Database from '../database';
-import Transaction from './transaction.model';
-
+import Database from '../database.js';
+import Transaction from './transaction.model.js';
 
 class Models {
     async sync(options = {alter: true}) {

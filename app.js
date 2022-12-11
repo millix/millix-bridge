@@ -1,19 +1,26 @@
-import config from './core/config/config';
-import cron from 'node-cron';
-import Database from './core/storage/database';
-import Models from './core/storage/models/models';
+import config from './core/config/config.js';
+import Database from './core/storage/database.js';
+import Models from './core/storage/models/models.js';
+import MillixBridge from './core/bridge/millix-bridge.js';
+import logger from './core/logger.js';
+import yargs from 'yargs';
+import {hideBin} from 'yargs/helpers';
+import path from 'path';
+import os from 'os';
+import EthereumBridge from './core/bridge/ethereum-bridge.js';
 
-const argv = require('yargs')
-    .options({
-        'initial-peers': {
-            demandOption: false,
-            array       : true
-        },
-        'nat-pmp'      : {
-            type   : 'boolean',
-            default: true
-        }
-    }).argv;
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+const argv = yargs(hideBin(process.argv)).options({
+    'initial-peers': {
+        demandOption: false,
+        array       : true
+    },
+    'nat-pmp'      : {
+        type   : 'boolean',
+        default: true
+    }
+}).argv;
 
 if (argv.debug === 'true') {
     config.MODE_DEBUG = true;
@@ -27,23 +34,30 @@ if (argv.host) {
     config.API_HOST = argv.host;
 }
 
+const dataFolder = argv.dataFolder ?
+                   path.isAbsolute(argv.dataFolder) ? argv.dataFolder : path.join(os.homedir(), argv.dataFolder)
+                                   : path.join(os.homedir(), config.NODE_DATA_FOLDER);
+
+config.NODE_KEY_PATH    = path.join(dataFolder, 'node.json');
+config.NODE_DATA_FOLDER = dataFolder;
+
 (async() => {
-    console.log('[app] starting millix bridge agent');
+    logger.debug('[app] starting millix bridge agent');
     const sequelize = await Database.getConnection();
 
     try {
         await sequelize.authenticate();
-        console.log('[database] connection has been established successfully.');
+        logger.debug('[database] connection has been established successfully.');
 
         await Models.sync();
-        console.log('[database] database models synced.');
+        logger.debug('[database] database models synced.');
     }
     catch (e) {
-        console.error('[database] unexpected database error: ', e);
+        logger.error('[database] unexpected database error: ', e);
         throw e;
     }
 
-    cron.schedule('* * * * *', () => {
-        console.log('[main] fecting new transactions');
-    });
+    await MillixBridge.initialize();
+    await EthereumBridge.initialize();
+
 })();
