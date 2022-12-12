@@ -53,7 +53,13 @@ class EthereumBridge {
     async _onBurnStart(event) {
         const data = event.returnValues;
         logger.debug(`[ethereum-bridge] ${data.amount} wmlx burn on transaction ${event.transactionHash} from ethereum address ${data.from} to millix address ${data.to} (block number: ${event.blockNumber})`);
-        await TransactionRepository.registerBurnTransaction(event.transactionHash, data.from, data.amount, 'ethereum', event.blockNumber, 'millix', data.to, convertWrappedMillixToMillix(data.amount));
+        const amount = parseInt(data.amount);
+        try {
+            await TransactionRepository.registerBurnTransaction(event.transactionHash, data.from, amount, 'ethereum', event.blockNumber, 'millix', data.to, convertWrappedMillixToMillix(amount));
+        }
+        catch (e) {
+            logger.warn(`[ethereum-bridge] on burn wmlx: ${e}`)
+        }
     }
 
     async mintWrappedMillix(transaction) {
