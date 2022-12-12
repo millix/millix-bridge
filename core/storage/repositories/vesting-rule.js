@@ -13,6 +13,10 @@ class VestingRuleRepository {
     async listAll(){
         return await VestingRule.findAll({})
     }
+
+    async deleteAll(){
+        return await VestingRule.destroy({truncate: true})
+    }
 }
 
 export default new VestingRuleRepository();

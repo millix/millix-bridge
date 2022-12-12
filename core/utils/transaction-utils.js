@@ -1,4 +1,5 @@
-import logger from '../logger.js';
+import is from 'is2'
+
 
 export const PROCESSING_STATE = {
     NEW         : 'NEW',
@@ -18,7 +19,14 @@ export const EVENT = {
     BURN: 'BURN'
 };
 
-export const isMintVested = (data) => {
-    // TO DO - logic here
-    logger.debug(data);
-};
+export const isMintVested = (rules, data) =>{
+    
+    // TO DO - Maybe run some test on rules and data . Ex: verify if the rules/data is empty/null/undefined
+    for(let rule of rules) {
+        if(is[rule.operator](data[rule.field], rule.value)){
+            return true
+        }
+    }
+
+    return false
+}
