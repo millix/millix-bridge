@@ -24,9 +24,9 @@ This project is under construction
 
 #### Deliverable 2
 
-- [ ] agent code to receive wmlx burn events and log them
+- [x] agent code to receive wmlx burn events and log them
 
-- [ ] agent code to initialize a millix transaction and log it
+- [x] agent code to initialize a millix transaction and log it
 
 - [ ] agent code to watch the state of a millix transaction (sending) and update the log when it hibernates
 
