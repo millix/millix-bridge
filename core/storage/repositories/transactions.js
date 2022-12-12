@@ -1,6 +1,6 @@
 import TransactionModel from '../models/transaction.model.js';
 import {Op} from 'sequelize';
-import {PROCESSING_STATE, TRANSACTION_STATE} from '../../utils/transaction-utils.js';
+import {EVENT, PROCESSING_STATE, TRANSACTION_STATE} from '../../utils/transaction-utils.js';
 
 
 class TransactionRepository {
@@ -74,9 +74,10 @@ class TransactionRepository {
         });
     }
 
-    async listTransactionsMissingData() {
+    async listMintTransactionsMissingData() {
         return await TransactionModel.findAll({
             where: {
+                event      : EVENT.MINT,
                 addressFrom: {
                     [Op.is]: null
                 }
@@ -106,8 +107,20 @@ class TransactionRepository {
             blockNumber,
             addressTo,
             amountTo,
-            event          : 'BURN',
+            event          : EVENT.BURN,
             processingState: PROCESSING_STATE.NEW
+        });
+    }
+
+    async listTransactionsToBurn() {
+        return await TransactionModel.findAll({
+            where: {
+                processingState: PROCESSING_STATE.NEW,
+                event          : EVENT.BURN,
+                transactionIdTo: {
+                    [Op.is]: null
+                }
+            }
         });
     }
 }

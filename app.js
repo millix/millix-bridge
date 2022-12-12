@@ -1,13 +1,12 @@
 import config from './core/config/config.js';
 import Database from './core/storage/database.js';
 import Models from './core/storage/models/models.js';
-import MillixBridge from './core/bridge/millix-bridge.js';
 import logger from './core/logger.js';
 import yargs from 'yargs';
 import {hideBin} from 'yargs/helpers';
 import path from 'path';
 import os from 'os';
-import EthereumBridge from './core/bridge/ethereum-bridge.js';
+import Bridge from './core/bridge/bridge.js';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -57,7 +56,6 @@ config.NODE_DATA_FOLDER = dataFolder;
         throw e;
     }
 
-    await MillixBridge.initialize();
-    await EthereumBridge.initialize();
+    await Bridge.initialize();
 
 })();

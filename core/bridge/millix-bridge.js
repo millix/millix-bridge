@@ -1,17 +1,17 @@
 import Server from '../api/server.js';
 import logger from '../logger.js';
 import TransactionRepository from '../storage/repositories/transactions.js';
-import VestingRuleRepository from '../storage/repositories/vesting-rule.js'
+import VestingRuleRepository from '../storage/repositories/vesting-rule.js';
 import task from '../task.js';
-import EthereumBridge from './ethereum-bridge.js';
 import config from '../config/config.js';
 import {promisify} from 'util';
 import fs from 'fs';
 import _ from 'lodash';
 import fetch from 'node-fetch';
 import {convertMillixToWrappedMillix, getBridgeMappingData, isMintTransaction, isValidBridgeTransaction} from '../utils/millix-utils.js';
-import { PROCESSING_STATE, EVENT } from '../utils/transaction-utils.js';
-import { isMintVested } from '../utils/transaction-utils.js';
+import {PROCESSING_STATE, EVENT} from '../utils/transaction-utils.js';
+import {isMintVested} from '../utils/transaction-utils.js';
+
 
 class MillixBridge {
     async initialize() {
@@ -19,22 +19,11 @@ class MillixBridge {
         await this.server.start();
         await this._initializeNodeEndpoint();
         logger.debug('[millix-bridge] api started');
-
-        task.scheduleTask('mint-transactions', this._processTransactionMint.bind(this), config.BRIDGE_MINT_WAIT_TIME, true);
-        task.scheduleTask('fetch-transaction-data', this._fetchTransactionData.bind(this), config.BRIDGE_DATA_FETCH_WAIT_TIME, true);
+        task.scheduleTask('fetch-transaction-data', this._fetchMintTransactionData.bind(this), config.BRIDGE_DATA_FETCH_WAIT_TIME, true);
     }
 
-    async _processTransactionMint() {
-        const transactions = await TransactionRepository.listTransactionsToMint();
-        logger.debug(`[millix-bridge] ${transactions.length} transactions to mint`);
-        for (let transaction of transactions) {
-            logger.debug(`[millix-bridge] minting transaction`, transaction.toJSON());
-            await EthereumBridge.mintWrappedMillix(transaction);
-        }
-    }
-
-    async _fetchTransactionData() {
-        const transactions = await TransactionRepository.listTransactionsMissingData();
+    async _fetchMintTransactionData() {
+        const transactions = await TransactionRepository.listMintTransactionsMissingData();
         logger.debug(`[millix-bridge] fetch data for ${transactions.length} transactions`);
         for (let transaction of transactions) {
             logger.debug(`[millix-bridge] fetch data for transaction with hash: ${transaction.transactionIdFrom}`);
@@ -54,27 +43,27 @@ class MillixBridge {
                 const amountTo   = convertMillixToWrappedMillix(amountFrom);
 
                 const bridgeMappingData = getBridgeMappingData(data);
-                let networkTo, addressTo, event;
-
                 if (isMintTransaction(data)) {
-                    networkTo = bridgeMappingData.network;
-                    event     = EVENT.MINT;
-                }
-                else {
-                    networkTo = 'millix';
-                    event     = EVENT.BURN;
+                    // TO DO
+                    // await isMintVested(data);
+
+                    await TransactionRepository.updateTransaction(transaction.transactionIdFrom, addressFrom, amountFrom, bridgeMappingData.network, bridgeMappingData.address, amountTo, EVENT.MINT);
                 }
 
-                // TO DO
-                // await isMintVested(data);
-
-                addressTo = bridgeMappingData.address;
-
-                await TransactionRepository.updateTransaction(transaction.transactionIdFrom, addressFrom, amountFrom, networkTo, addressTo, amountTo, event);
+                // we dont care about any other transaction but mint transactions on millix network
+                logger.warn(`[millix-bridge] skip transaction with hash ${transaction.transactionIdFrom}`);
+                await TransactionRepository.deleteTransaction(transaction.transactionIdFrom);
             }
             catch (e) {
                 logger.error(`[millix-bridge] error fetching data from transaction hash ${transaction.transactionIdFrom} ${e}`);
             }
+        }
+    }
+
+    async burnWrappedMillix(transaction) {
+        if (!this.millixNodeEndpoint) {
+            logger.error(`[millix-bridge] millix node api is not configured`);
+            return;
         }
     }
 
