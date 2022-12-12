@@ -1,9 +1,11 @@
-import logger from "../logger.js";
+import logger from '../logger.js';
 
 export const PROCESSING_STATE = {
     NEW         : 'NEW',
     HIBERNATED  : 'HIBERNATED',
     MINT_STARTED: 'MINT_STARTED',
+    BURN_STARTED: 'BURN_STARTED',
+    BURNED      : 'BURNED',
     MINTED      : 'MINTED'
 };
 
@@ -16,7 +18,7 @@ export const EVENT = {
     BURN: 'BURN'
 };
 
-export const isMintVested = (data) =>{
+export const isMintVested = (data) => {
     // TO DO - logic here
-    logger.debug(data)
-}
+    logger.debug(data);
+};

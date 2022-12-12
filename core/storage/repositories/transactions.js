@@ -95,6 +95,20 @@ class TransactionRepository {
     async getLastProcessedBlockNumber() {
         return await TransactionModel.max('blockNumber');
     }
+
+    async registerBurnTransaction(transactionIdFrom, addressFrom, amountFrom, networkFrom, networkTo, addressTo, amountTo) {
+        return await TransactionModel.create({
+            transactionIdFrom,
+            addressFrom,
+            amountFrom,
+            networkFrom,
+            networkTo,
+            addressTo,
+            amountTo,
+            event          : 'BURN',
+            processingState: PROCESSING_STATE.NEW
+        });
+    }
 }
 
 
