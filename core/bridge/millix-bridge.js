@@ -65,6 +65,8 @@ class MillixBridge {
             logger.error(`[millix-bridge] millix node api is not configured`);
             return;
         }
+
+
     }
 
     async onTransactionNew(transactionId) {

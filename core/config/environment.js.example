@@ -21,5 +21,6 @@ environment['BRIDGE_ETHEREUM_CONTRACT_WRAPPED_MILLIX'] = undefined;
 environment['BRIDGE_ETHEREUM_CONTRACT_CREATE_BLOCK']   = undefined;
 environment['BRIDGE_ETHEREUM_CONTRACT_OWNER_ADDRESS']  = undefined;
 environment['BRIDGE_ETHEREUM_WALLET_PRIVATE_KEY']      = undefined;
+environment['BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER']     = undefined;
 
 export default environment;
