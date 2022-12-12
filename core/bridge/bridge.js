@@ -17,7 +17,7 @@ class Bridge {
     }
 
     async _processTransactionBurn() {
-        const transactions = await TransactionRepository.listTransactionsToMint();
+        const transactions = await TransactionRepository.listTransactionsToBurn();
         logger.debug(`[bridge] ${transactions.length} transactions to burn`);
         for (let transaction of transactions) {
             logger.debug(`[bridge] burning transaction`, transaction.toJSON());

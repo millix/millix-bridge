@@ -12,11 +12,21 @@ class TransactionRepository {
         });
     }
 
-    async updateTransactionState(transactionIdFrom, newTransactionState) {
-        return await TransactionModel.update({
+    async updateTransactionState(transactionId, newTransactionState) {
+        await TransactionModel.update({
             transactionState: newTransactionState
         }, {
-            where: {transactionIdFrom}
+            where: {
+                transactionIdFrom: transactionId
+            }
+        });
+
+        await TransactionModel.update({
+            transactionState: newTransactionState
+        }, {
+            where: {
+                transactionIdTo: transactionId
+            }
         });
     }
 
@@ -121,6 +131,15 @@ class TransactionRepository {
                     [Op.is]: null
                 }
             }
+        });
+    }
+
+    async updateTransactionAsBurnStarted(transactionIdFrom, transactionIdTo) {
+        return await TransactionModel.update({
+            processingState: PROCESSING_STATE.BURN_STARTED,
+            transactionIdTo
+        }, {
+            where: {transactionIdFrom}
         });
     }
 }

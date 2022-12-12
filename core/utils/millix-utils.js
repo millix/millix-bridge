@@ -54,3 +54,18 @@ export const isValidBridgeTransaction = (transaction) => {
 export const hasAddressVersion = (address, version) => {
     return address.includes(version);
 };
+
+export const parseMillixAddress = (address) => {
+    const matches = address.trim().match(new RegExp(`(?<address>.*)(?<version>${config.MODE_TEST_NETWORK ? 'l[A-z]l' : '0[A-z]0'})(?<identifier>.*)`));
+    if (!matches || !matches.groups['address'] || !matches.groups['version'] || !matches.groups['identifier']) {
+        throw new Error('[millix-utils] invalid millix address');
+    }
+    const addressBase          = matches.groups['address'];
+    const addressVersion       = matches.groups['version'];
+    const addressKeyIdentifier = matches.groups['identifier'];
+    return {
+        address_base          : addressBase,
+        address_version       : addressVersion,
+        address_key_identifier: addressKeyIdentifier
+    };
+};
