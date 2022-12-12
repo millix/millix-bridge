@@ -16,7 +16,8 @@ class Database {
                 {
                     host   : config.DATABASE_HOST,
                     dialect: config.DATABASE_DIALECT,
-                    port: config.DATABASE_PORT
+                    logging: config.DATABASE_ENABLE_LOGS,
+                    port   : config.DATABASE_PORT
                 }
             );
         }

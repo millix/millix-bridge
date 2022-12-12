@@ -23,6 +23,9 @@ const Transaction = sequelize.define('transaction', {
     transactionIdTo  : {
         type: DataTypes.STRING
     },
+    blockNumber      : {
+        type: DataTypes.INTEGER
+    },
     addressFrom      : {
         type: DataTypes.STRING
     },
@@ -39,7 +42,7 @@ const Transaction = sequelize.define('transaction', {
         type: DataTypes.STRING
     },
     transactionState : {
-        type     : DataTypes.STRING,
+        type: DataTypes.STRING
     },
     processingState  : {
         type     : DataTypes.STRING,
@@ -59,6 +62,10 @@ const Transaction = sequelize.define('transaction', {
         {
             unique: true,
             fields: ['transactionIdTo']
+        },
+        {
+            unique: false,
+            fields: ['blockNumber']
         }
     ]
 });

@@ -5,6 +5,10 @@ export const convertMillixToWrappedMillix = (millixAmount) => {
     return Math.floor(millixAmount / 1000000);
 };
 
+export const convertWrappedMillixToMillix = (wmlxAmount) => {
+    return Math.floor(wmlxAmount * 1000000);
+};
+
 export const getBridgeMappingData = (transaction) => {
     return transaction.transaction_output_attribute?.transaction_output_metadata?.bridge_mapping;
 };

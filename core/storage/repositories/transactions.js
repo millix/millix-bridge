@@ -33,9 +33,10 @@ class TransactionRepository {
         });
     }
 
-    async updateTransactionAsMinted(transactionIdFrom, transactionIdTo) {
+    async updateTransactionAsMinted(transactionIdFrom, transactionIdTo, blockNumber) {
         return await TransactionModel.update({
             transactionIdTo,
+            blockNumber,
             processingState: PROCESSING_STATE.MINTED
         }, {
             where: {transactionIdFrom}
@@ -88,6 +89,25 @@ class TransactionRepository {
             where: {
                 transactionIdFrom
             }
+        });
+    }
+
+    async getLastProcessedBlockNumber() {
+        return await TransactionModel.max('blockNumber');
+    }
+
+    async registerBurnTransaction(transactionIdFrom, addressFrom, amountFrom, networkFrom, blockNumber, networkTo, addressTo, amountTo) {
+        return await TransactionModel.create({
+            transactionIdFrom,
+            addressFrom,
+            amountFrom,
+            networkFrom,
+            networkTo,
+            blockNumber,
+            addressTo,
+            amountTo,
+            event          : 'BURN',
+            processingState: PROCESSING_STATE.NEW
         });
     }
 }
