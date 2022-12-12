@@ -1,10 +1,13 @@
 import logger from "../logger.js";
 import is from 'is2'
 
+
 export const PROCESSING_STATE = {
     NEW         : 'NEW',
     HIBERNATED  : 'HIBERNATED',
     MINT_STARTED: 'MINT_STARTED',
+    BURN_STARTED: 'BURN_STARTED',
+    BURNED      : 'BURNED',
     MINTED      : 'MINTED'
 };
 

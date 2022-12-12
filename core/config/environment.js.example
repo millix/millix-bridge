@@ -7,6 +7,7 @@ environment['DATABASE_AUTH_USER']     = 'root';
 environment['DATABASE_PORT']          = 3306;
 environment['DATABASE_AUTH_PASSWORD'] = 'your_root_password';
 environment['DATABASE_DIALECT']       = 'mysql';
+environment['DATABASE_ENABLE_LOGS']   = false;
 
 environment['MODE_TEST_NETWORK']             = false;
 environment['NODE_PORT_API']                 = 5500;
