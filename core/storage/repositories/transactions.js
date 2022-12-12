@@ -33,9 +33,10 @@ class TransactionRepository {
         });
     }
 
-    async updateTransactionAsMinted(transactionIdFrom, transactionIdTo) {
+    async updateTransactionAsMinted(transactionIdFrom, transactionIdTo, blockNumber) {
         return await TransactionModel.update({
             transactionIdTo,
+            blockNumber,
             processingState: PROCESSING_STATE.MINTED
         }, {
             where: {transactionIdFrom}
@@ -89,6 +90,10 @@ class TransactionRepository {
                 transactionIdFrom
             }
         });
+    }
+
+    async getLastProcessedBlockNumber() {
+        return await TransactionModel.max('blockNumber');
     }
 }
 
