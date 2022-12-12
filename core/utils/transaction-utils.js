@@ -21,13 +21,11 @@ export const isMintVested = (rules, data) =>{
 
     // TO DO - Maybe run some test on rules and data . Ex: verify if the rules/data is empty/null/undefined
 
-    let result = true
-
-    rules.forEach(rule => {
+    for(let rule of rules) {
         if(!is[rule.operator](data[rule.field], rule.value)){
-            result = false
+            return false
         }
-    });
+    }
 
-    return result
+    return true
 }
