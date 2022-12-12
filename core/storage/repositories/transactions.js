@@ -96,13 +96,14 @@ class TransactionRepository {
         return await TransactionModel.max('blockNumber');
     }
 
-    async registerBurnTransaction(transactionIdFrom, addressFrom, amountFrom, networkFrom, networkTo, addressTo, amountTo) {
+    async registerBurnTransaction(transactionIdFrom, addressFrom, amountFrom, networkFrom, blockNumber, networkTo, addressTo, amountTo) {
         return await TransactionModel.create({
             transactionIdFrom,
             addressFrom,
             amountFrom,
             networkFrom,
             networkTo,
+            blockNumber,
             addressTo,
             amountTo,
             event          : 'BURN',
