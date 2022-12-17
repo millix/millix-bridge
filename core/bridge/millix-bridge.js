@@ -9,7 +9,7 @@ import fs from 'fs';
 import _ from 'lodash';
 import fetch from 'node-fetch';
 import {convertMillixToWrappedMillix, getBridgeMappingData, isMintTransaction, isValidBridgeTransaction, parseMillixAddress} from '../utils/millix-utils.js';
-import {PROCESSING_STATE, EVENT} from '../utils/transaction-utils.js';
+import {EVENT} from '../utils/transaction-utils.js';
 import {isMintVested} from '../utils/transaction-utils.js';
 
 
@@ -30,7 +30,7 @@ class MillixBridge {
             logger.debug(`[millix-bridge] fetch data for transaction with hash: ${transaction.transactionIdFrom}`);
             try {
                 const data = await (await fetch(`${this.millixNodeEndpoint}/IBHgAmydZbmTUAe8?p0=${transaction.transactionIdFrom}&p1=${config.NODE_SHARD_ID}`)).json();
-                if (!isValidBridgeTransaction(data)) {
+                if (!isMintTransaction(data) || !isValidBridgeTransaction(data)) {
                     logger.warn(`[millix-bridge] skip transaction with hash ${transaction.transactionIdFrom}`);
                     await TransactionRepository.deleteTransaction(transaction.transactionIdFrom);
                     continue;
@@ -44,12 +44,9 @@ class MillixBridge {
                 const amountTo   = convertMillixToWrappedMillix(amountFrom);
 
                 const bridgeMappingData = getBridgeMappingData(data);
-                if (isMintTransaction(data)) {
-                    // TO DO
-                    // await isMintVested(data);
-
-                    await TransactionRepository.updateTransaction(transaction.transactionIdFrom, addressFrom, amountFrom, bridgeMappingData.network, bridgeMappingData.address, amountTo, EVENT.MINT);
-                }
+                // TO DO
+                // await isMintVested(data);
+                await TransactionRepository.updateTransaction(transaction.transactionIdFrom, addressFrom, amountFrom, bridgeMappingData.network, bridgeMappingData.address, amountTo, EVENT.MINT);
 
                 // we dont care about any other transaction but mint
                 // transactions on millix network
@@ -169,7 +166,7 @@ class MillixBridge {
     }
 
     async onTransactionHibernate(transactionId) {
-        await TransactionRepository.updateProcessingState(transactionId, PROCESSING_STATE.HIBERNATED);
+        await TransactionRepository.hibernateTransaction(transactionId);
     }
 
     async onTransactionValidationUpdate(transactionId, updateStatus) {

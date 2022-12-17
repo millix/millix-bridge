@@ -3,6 +3,7 @@ import logger from '../logger.js';
 import config from '../config/config.js';
 import TransactionRepository from '../storage/repositories/transactions.js';
 import {convertWrappedMillixToMillix} from '../utils/millix-utils.js';
+import task from '../task.js';
 
 
 class EthereumBridge {
@@ -11,6 +12,15 @@ class EthereumBridge {
         if (this.contract) {
             await this._processEventsFromLastKnownBlock();
             this._bindBlockchainEventListeners();
+        }
+
+        task.scheduleTask('update-transaction-burned', this._updateTransactionBurned.bind(this), config.BRIDGE_DATA_FETCH_WAIT_TIME, true);
+    }
+
+    async _updateTransactionBurned() {
+        const transactions = await TransactionRepository.listTransactionBurnedToFinalize();
+        for (const transaction of transactions) {
+            await TransactionRepository.updateTransactionAsBurned(transaction.transactionIdFrom);
         }
     }
 
@@ -58,7 +68,7 @@ class EthereumBridge {
             await TransactionRepository.registerBurnTransaction(event.transactionHash, data.from, amount, 'ethereum', event.blockNumber, 'millix', data.to, convertWrappedMillixToMillix(amount));
         }
         catch (e) {
-            logger.warn(`[ethereum-bridge] on burn wmlx: ${e}`)
+            logger.warn(`[ethereum-bridge] on burn wmlx: ${e}`);
         }
     }
 

@@ -69,6 +69,24 @@ class TransactionRepository {
         });
     }
 
+    async hibernateTransaction(transactionId) {
+        await TransactionModel.update({
+            processingState: PROCESSING_STATE.HIBERNATED
+        }, {
+            where: {
+                transactionIdFrom: transactionId
+            }
+        });
+
+        await TransactionModel.update({
+            processingState: PROCESSING_STATE.HIBERNATED
+        }, {
+            where: {
+                transactionIdTo: transactionId
+            }
+        });
+    }
+
     async listTransactionsToMint() {
         return await TransactionModel.findAll({
             where: {
@@ -140,6 +158,24 @@ class TransactionRepository {
             transactionIdTo
         }, {
             where: {transactionIdFrom}
+        });
+    }
+
+    async updateTransactionAsBurned(transactionIdFrom) {
+        return await TransactionModel.update({
+            processingState: PROCESSING_STATE.BURNED
+        }, {
+            where: {transactionIdFrom}
+        });
+    }
+
+    async listTransactionBurnedToFinalize() {
+        return await TransactionModel.findAll({
+            where: {
+                processingState : PROCESSING_STATE.HIBERNATED,
+                transactionState: TRANSACTION_STATE.VALID,
+                event           : EVENT.BURN
+            }
         });
     }
 }
