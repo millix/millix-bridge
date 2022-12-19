@@ -113,7 +113,7 @@ class TransactionRepository {
     }
 
     async deleteTransaction(transactionIdFrom) {
-        return await TransactionModel.delete({
+        return await TransactionModel.destroy({
             where: {
                 transactionIdFrom
             }
