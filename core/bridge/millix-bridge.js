@@ -24,7 +24,7 @@ class MillixBridge {
     }
 
     async _fetchMintTransactionData() {
-        const transactions = await TransactionRepository.listMintTransactionsMissingData();
+        const transactions = await TransactionRepository.listTransactionsMissingData();
         logger.debug(`[millix-bridge] fetch data for ${transactions.length} transactions`);
         for (let transaction of transactions) {
             logger.debug(`[millix-bridge] fetch data for transaction with hash: ${transaction.transactionIdFrom}`);
@@ -65,55 +65,62 @@ class MillixBridge {
             return;
         }
 
-        const outputs       = await this._getOutputsToFundBurnTransaction(transaction.amountTo);
-        const address       = parseMillixAddress(transaction.addressTo);
-        const burnFeeAmount = 1000000;
-        const data          = {
-            transaction_input_list      : _.map(outputs, output => ({
-                address_base           : config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER,
-                address_version        : config.BRIDGE_ADDRESS_VERSION,
-                address_key_identifier : config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER,
-                output_transaction_id  : output.transaction_id,
-                output_shard_id        : output.shard_id,
-                output_position        : output.output_position,
-                output_transaction_date: output.transaction_date
-            })),
-            transaction_output_list     : [
-                {
-                    address_base          : address.address_base,
-                    address_version       : address.address_version,
-                    address_key_identifier: address.address_key_identifier,
-                    amount                : transaction.amountTo
-                }
-            ],
-            transaction_output_fee      : {
-                fee_type: 'transaction_fee_default',
-                amount  : burnFeeAmount
-            },
-            transaction_output_attribute: {
-                bridge_mapping: {
-                    network       : transaction.networkFrom,
-                    address       : transaction.addressFrom,
-                    transaction_id: transaction.transactionIdFrom
-                }
-            },
-            transaction_version         : config.BRIDGE_TRANSACTION_VERSION_BURN
-        };
+        let outputs;
+        try {
+            outputs = await this._getOutputsToFundBurnTransaction(transaction.amountTo);
 
-        let remainingOutputAmount = _.sumBy(outputs, 'amount') - transaction.amountTo - burnFeeAmount;
-        if (remainingOutputAmount > 0) {
-            data.transaction_output_list.push({
-                address_base          : config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER,
-                address_version       : config.BRIDGE_ADDRESS_VERSION,
-                address_key_identifier: config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER,
-                amount                : remainingOutputAmount
-            });
+            const address       = parseMillixAddress(transaction.addressTo);
+            const burnFeeAmount = 1000000;
+            const data          = {
+                transaction_input_list      : _.map(outputs, output => ({
+                    address_base           : config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER,
+                    address_version        : config.BRIDGE_ADDRESS_VERSION,
+                    address_key_identifier : config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER,
+                    output_transaction_id  : output.transaction_id,
+                    output_shard_id        : output.shard_id,
+                    output_position        : output.output_position,
+                    output_transaction_date: output.transaction_date
+                })),
+                transaction_output_list     : [
+                    {
+                        address_base          : address.address_base,
+                        address_version       : address.address_version,
+                        address_key_identifier: address.address_key_identifier,
+                        amount                : transaction.amountTo - burnFeeAmount
+                    }
+                ],
+                transaction_output_fee      : {
+                    fee_type: 'transaction_fee_default',
+                    amount  : burnFeeAmount
+                },
+                transaction_output_attribute: {
+                    bridge_mapping: {
+                        network       : transaction.networkFrom,
+                        address       : transaction.addressFrom,
+                        transaction_id: transaction.transactionIdFrom
+                    }
+                },
+                transaction_version         : config.BRIDGE_TRANSACTION_VERSION_BURN
+            };
+
+            let remainingOutputAmount = _.sumBy(outputs, 'amount') - transaction.amountTo;
+            if (remainingOutputAmount > 0) {
+                data.transaction_output_list.push({
+                    address_base          : config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER,
+                    address_version       : config.BRIDGE_ADDRESS_VERSION,
+                    address_key_identifier: config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER,
+                    amount                : remainingOutputAmount
+                });
+            }
+
+            const signedTransactionList = await this.getSignedTransaction(data, {[config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER]: config.BRIDGE_MILLIX_WALLET_PRIVATE_KEY}, {[config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER]: config.BRIDGE_MILLIX_WALLET_PUBLIC_KEY});
+            const transactionIdTo       = signedTransactionList[signedTransactionList.length - 1].transaction_id;
+            await TransactionRepository.updateTransactionAsBurnStarted(transaction.transactionIdFrom, transactionIdTo);
+            this.propagateSignedTransaction(signedTransactionList).then(_ => _);
         }
-
-        const signedTransactionList = await this.getSignedTransaction(data, {[config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER]: config.BRIDGE_MILLIX_WALLET_PRIVATE_KEY}, {[config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER]: config.BRIDGE_MILLIX_WALLET_PUBLIC_KEY});
-        const transactionIdTo       = signedTransactionList[signedTransactionList.length - 1].transaction_id;
-        await TransactionRepository.updateTransactionAsBurnStarted(transaction.transactionIdFrom, transactionIdTo);
-        this.propagateSignedTransaction(signedTransactionList).then(_ => _);
+        catch (e) {
+            logger.error(`[millix-bridge] ${e}`);
+        }
     }
 
     async getSignedTransaction(data, privateKeyMap, publicKeyMap) {
@@ -158,7 +165,7 @@ class MillixBridge {
         if (!transactionOutputsList || transactionOutputsList.length === 0 || transactionOutputsList.api_status === 'fail') {
             return [];
         }
-        return transactionOutputsList.filter(output => output.status === 2 && output.transaction_status === 2 && output.address === this.millixNetworkBridgeAddress);
+        return transactionOutputsList.filter(output => output.address === this.millixNetworkBridgeAddress);
     }
 
     async onTransactionNew(transactionId) {

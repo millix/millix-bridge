@@ -102,10 +102,9 @@ class TransactionRepository {
         });
     }
 
-    async listMintTransactionsMissingData() {
+    async listTransactionsMissingData() {
         return await TransactionModel.findAll({
             where: {
-                event      : EVENT.MINT,
                 addressFrom: {
                     [Op.is]: null
                 }
