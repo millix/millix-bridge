@@ -47,11 +47,6 @@ class MillixBridge {
                 // TO DO
                 // await isMintVested(data);
                 await TransactionRepository.updateTransaction(transaction.transactionIdFrom, addressFrom, amountFrom, bridgeMappingData.network, bridgeMappingData.address, amountTo, EVENT.MINT);
-
-                // we dont care about any other transaction but mint
-                // transactions on millix network
-                logger.warn(`[millix-bridge] skip transaction with hash ${transaction.transactionIdFrom}`);
-                await TransactionRepository.deleteTransaction(transaction.transactionIdFrom);
             }
             catch (e) {
                 logger.error(`[millix-bridge] error fetching data from transaction hash ${transaction.transactionIdFrom} ${e}`);
