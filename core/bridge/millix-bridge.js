@@ -160,7 +160,8 @@ class MillixBridge {
         if (!transactionOutputsList || transactionOutputsList.length === 0 || transactionOutputsList.api_status === 'fail') {
             return [];
         }
-        return transactionOutputsList.filter(output => output.address === this.millixNetworkBridgeAddress);
+        const pendingTransactions = new Set(await TransactionRepository.listTransactionToMintPendingHibernation());
+        return transactionOutputsList.filter(output => !pendingTransactions.has(output.transaction_id) &&  output.address === this.millixNetworkBridgeAddress);
     }
 
     async onTransactionNew(transactionId) {
