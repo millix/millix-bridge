@@ -90,11 +90,9 @@ class TransactionRepository {
     async listTransactionToMintPendingHibernation() {
         return await TransactionModel.findAll({
             where: {
-                processingState: {
-                    [Op.is]: PROCESSING_STATE.NEW
-                },
+                processingState: PROCESSING_STATE.NEW,
                 event          : {
-                    [Op.not]: EVENT.BURN
+                    [Op.ne]: EVENT.BURN
                 }
             }
         });

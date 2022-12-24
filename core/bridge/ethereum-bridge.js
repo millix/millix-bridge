@@ -83,11 +83,16 @@ class EthereumBridge {
             throw Error(`[ethereum-bridge] invalid mint transaction ${transaction.transactionIdFrom}`);
         }
 
-        this.contract.methods.mint(transaction.addressTo, transaction.amountTo, transaction.transactionIdFrom).send({
-            from: config.BRIDGE_ETHEREUM_CONTRACT_OWNER_ADDRESS,
-            gas : 100000
-        });
-        await TransactionRepository.updateTransactionAsMintStarted(transaction.transactionIdFrom);
+        try{
+            await TransactionRepository.updateTransactionAsMintStarted(transaction.transactionIdFrom);
+            this.contract.methods.mint(transaction.addressTo, transaction.amountTo, transaction.transactionIdFrom).send({
+                from: config.BRIDGE_ETHEREUM_CONTRACT_OWNER_ADDRESS,
+                gas : 100000
+            });
+        } catch (e) {
+            await TransactionRepository.hibernateTransaction(transaction.transactionIdFrom);
+            logger.error(e);
+        }
     }
 
 }
