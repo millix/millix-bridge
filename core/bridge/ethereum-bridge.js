@@ -85,7 +85,7 @@ class EthereumBridge {
 
         try{
             await TransactionRepository.updateTransactionAsMintStarted(transaction.transactionIdFrom);
-            this.contract.methods.mint(transaction.addressTo, transaction.amountTo, transaction.transactionIdFrom).send({
+            await this.contract.methods.mint(transaction.addressTo, transaction.amountTo, transaction.transactionIdFrom).send({
                 from: config.BRIDGE_ETHEREUM_CONTRACT_OWNER_ADDRESS,
                 gas : 100000
             });
