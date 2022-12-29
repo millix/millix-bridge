@@ -5,7 +5,20 @@ import config from '../../config/config.js';
 
 class EthereumClient {
     constructor() {
-        this.web3 = new Web3(config.BRIDGE_ETHEREUM_PROVIDER);
+        this.web3 = new Web3(new Web3.providers.WebsocketProvider(config.BRIDGE_ETHEREUM_PROVIDER, {
+            reconnect   : {
+                auto     : true,
+                delay    : 1000,
+                onTimeout: false
+            },
+            timeout     : 5000,
+            clientConfig: {
+                keepalive                       : true,
+                keepaliveInterval               : 1000,
+                dropConnectionOnKeepaliveTimeout: true,
+                keepaliveGracePeriod            : 4000
+            }
+        }));
         if (config.BRIDGE_ETHEREUM_WALLET_PRIVATE_KEY) {
             this.web3.eth.accounts.wallet.add(config.BRIDGE_ETHEREUM_WALLET_PRIVATE_KEY);
         }
