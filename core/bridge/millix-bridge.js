@@ -1,7 +1,6 @@
 import Server from '../api/server.js';
 import logger from '../logger.js';
 import TransactionRepository from '../storage/repositories/transactions.js';
-import VestingRuleRepository from '../storage/repositories/vesting-rule.js';
 import task from '../task.js';
 import config from '../config/config.js';
 import {promisify} from 'util';
@@ -10,7 +9,6 @@ import _ from 'lodash';
 import fetch from 'node-fetch';
 import {convertMillixToWrappedMillix, getBridgeMappingData, isMintTransaction, isValidBridgeTransaction, parseMillixAddress} from '../utils/millix-utils.js';
 import {EVENT} from '../utils/transaction-utils.js';
-import {isMintVested} from '../utils/transaction-utils.js';
 
 
 class MillixBridge {
@@ -64,9 +62,10 @@ class MillixBridge {
         try {
             outputs = await this._getOutputsToFundBurnTransaction(transaction.amountTo);
 
-            const address       = parseMillixAddress(transaction.addressTo);
-            const burnFeeAmount = 1000000;
-            const data          = {
+            const address        = parseMillixAddress(transaction.addressTo);
+            const burnFeeAmount  = config.BRIDGE_BURN_FEE;
+            const proxyFeeAmount = config.DEFAULT_PROXY_FEE;
+            const data           = {
                 transaction_input_list      : _.map(outputs, output => ({
                     address_base           : config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER,
                     address_version        : config.BRIDGE_ADDRESS_VERSION,
@@ -82,11 +81,17 @@ class MillixBridge {
                         address_version       : address.address_version,
                         address_key_identifier: address.address_key_identifier,
                         amount                : transaction.amountTo - burnFeeAmount
+                    },
+                    {
+                        address_base          : config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER,
+                        address_version       : config.DEFAULT_ADDRESS_VERSION,
+                        address_key_identifier: config.BRIDGE_MILLIX_WALLET_KEY_IDENTIFIER,
+                        amount                : burnFeeAmount - proxyFeeAmount
                     }
                 ],
                 transaction_output_fee      : {
                     fee_type: 'transaction_fee_default',
-                    amount  : burnFeeAmount
+                    amount  : proxyFeeAmount
                 },
                 transaction_output_attribute: {
                     bridge_mapping: {
@@ -161,7 +166,7 @@ class MillixBridge {
             return [];
         }
         const pendingTransactions = new Set(await TransactionRepository.listTransactionToMintPendingHibernation());
-        return transactionOutputsList.filter(output => !pendingTransactions.has(output.transaction_id) &&  output.address === this.millixNetworkBridgeAddress);
+        return transactionOutputsList.filter(output => !pendingTransactions.has(output.transaction_id) && output.address === this.millixNetworkBridgeAddress);
     }
 
     async onTransactionNew(transactionId) {
