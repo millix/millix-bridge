@@ -20354,6 +20354,12 @@
     "version": "0.8.17+commit.8df45f5f.Emscripten.clang"
   },
   "networks": {
+    "1": {
+      "events": {},
+      "links": {},
+      "address": "0x77D0cb0ab54F9E74b9405a5B3f60DA06A78F1AAd",
+      "transactionHash": "0xc36de89f1d3f21300bffe4470cdedf274a59e6aa9e45fccfa6433014876816c6"
+    },
     "5": {
       "events": {
         "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925": {
@@ -20787,7 +20793,7 @@
     }
   },
   "schemaVersion": "3.4.10",
-  "updatedAt": "2022-12-11T15:41:15.925Z",
+  "updatedAt": "2023-01-05T15:41:26.916Z",
   "networkType": "ethereum",
   "devdoc": {
     "custom:security-contact": "developer@millix.com",
