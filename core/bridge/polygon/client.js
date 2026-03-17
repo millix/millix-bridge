@@ -3,9 +3,9 @@ import Web3 from 'web3';
 import config from '../../config/config.js';
 
 
-class EthereumClient {
+class PolygonClient {
     constructor() {
-        this.network = "ethereum";
+        this.network = "polygon";
         this.web3 = new Web3(new Web3.providers.WebsocketProvider(config.BRIDGE_ETHEREUM_PROVIDER, {
             reconnect   : {
                 auto     : true,
@@ -46,5 +46,5 @@ class EthereumClient {
 }
 
 
-export default new EthereumClient;
+export default new PolygonClient;
 
