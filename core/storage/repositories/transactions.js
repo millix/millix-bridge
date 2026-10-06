@@ -166,6 +166,7 @@ class TransactionRepository {
             where: {
                 processingState: PROCESSING_STATE.NEW,
                 event          : EVENT.BURN,
+                status         : 1,
                 transactionIdTo: {
                     [Op.is]: null
                 }
