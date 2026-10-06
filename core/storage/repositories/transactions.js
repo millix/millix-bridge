@@ -131,6 +131,17 @@ class TransactionRepository {
         });
     }
 
+    async getTransaction(transactionIdFrom) {
+        return await TransactionModel.findOne({
+            where: {transactionIdFrom}
+        });
+    }
+
+    /**
+     * highest block number seen on a registered transaction. only used to seed
+     * the block sync checkpoint on deployments created before it existed, see
+     * BlockSyncRepository for the tracked checkpoint.
+     */
     async getLastProcessedBlockNumber() {
         return await TransactionModel.max('blockNumber');
     }

@@ -1,6 +1,7 @@
 import Database from '../database.js';
 import Transaction from './transaction.model.js';
 import VestingRule from './vesting-rule.model.js';
+import BlockSync from './block-sync.model.js';
 
 
 class Models {
@@ -12,7 +13,8 @@ class Models {
 
 export {
     Transaction,
-    VestingRule
+    VestingRule,
+    BlockSync
 };
 
 export default new Models;
